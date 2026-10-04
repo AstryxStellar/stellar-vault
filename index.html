@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STELLAR VAULT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f1f5f9;--card:#fff;--ink:#0f172a;--mute:#475569;--line:#e2e8f0;--bd:#64748b;--blue:#1d4ed8;--green:#15803d;--red:#b91c1c;--soft:#f8fafc}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1220;--card:#111a2e;--ink:#f1f5f9;--mute:#94a3b8;--line:#223052;--bd:#64748b;--blue:#60a5fa;--soft:#0f172a;--green:#4ade80;--red:#f87171}}
+:root[data-theme="dark"]{--bg:#0b1220;--card:#111a2e;--ink:#f1f5f9;--mute:#94a3b8;--line:#223052;--bd:#64748b;--blue:#60a5fa;--soft:#0f172a;--green:#4ade80;--red:#f87171}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.4 Inter,Arial,sans-serif}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px;padding:16px 64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;cursor:pointer;white-space:nowrap}
+.logo i{width:34px;height:34px;border-radius:8px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:800 18px Inter;font-style:normal}
+.logo b{color:var(--blue)}
+.search{flex:1;height:44px;border:1px solid var(--bd);border-radius:8px;padding:0 16px;background:var(--soft);min-width:0}
+.cartbtn{height:44px;border:2px solid var(--blue);background:var(--card);color:var(--blue);border-radius:22px;padding:0 22px;font-weight:700;white-space:nowrap}
+main{padding:32px 64px 64px;max-width:1440px;margin:0 auto}
+h1{font-size:28px;font-weight:800;margin:0 0 4px}.sub{color:var(--mute);margin:0 0 24px}
+.layout{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+.panel h3{margin:0;font-size:16px}.panel small{color:var(--mute)}
+.lbl{font-size:12px;font-weight:700;color:var(--mute);margin:20px 0 10px;letter-spacing:.04em}
+.opt{display:flex;align-items:center;gap:10px;margin:10px 0;cursor:pointer}.opt span:last-child{margin-left:auto;color:var(--mute);font-size:13px}
+.opt input{accent-color:var(--blue);width:18px;height:18px;margin:0}
+.reset{width:100%;height:42px;border:2px dashed var(--ink);background:var(--card);border-radius:8px;font-weight:700;margin-top:12px}
+.note{background:var(--bg);border-radius:8px;padding:10px;text-align:center;font-size:12px;color:var(--mute);margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 16px 16px;overflow:hidden;display:flex;flex-direction:column}
+.thumb{margin:0 -16px 16px;height:150px;display:grid;place-items:center;background:var(--tint)}
+.cover{width:100px;height:136px;border-radius:4px;background:var(--c);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:4px 4px 0 rgba(15,23,42,.14);border-left:8px solid rgba(0,0,0,.25)}
+.cover div{background:rgba(15,23,42,.6);padding:6px 4px;text-align:center;font-size:10px;line-height:1.3}.cover b{font-size:11px;display:block}
+.cover.fig{border-radius:50px 50px 4px 4px;border-left:0}
+.tag{align-self:flex-start;font-size:12px;font-weight:700;padding:3px 12px;border-radius:12px;background:var(--tint);color:var(--tc)}
+.prod h4{font-size:16px;margin:12px 0 6px}.prod p{margin:0;font-size:12px;color:var(--mute)}
+.stock{font-size:12px;font-weight:600;margin:8px 0 12px;color:var(--green)}.stock.w{color:#b45309}.stock.p{color:var(--blue)}
+.price{display:flex;justify-content:space-between;align-items:baseline;font-size:20px;font-weight:800;margin-top:auto;margin-bottom:12px}.price small{font:400 12px Inter;color:var(--mute)}
+.btn{height:44px;border:0;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;width:100%}
+.btn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #93c5fd;outline-offset:2px}
+.btn.g{background:var(--green)}.btn:disabled{background:#64748b;cursor:not-allowed}
+.empty{padding:48px;text-align:center;color:var(--mute)}
+/* drawer + modal */
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:20;display:none}.ov.on{display:flex}
+#drawerOv{justify-content:flex-end}
+.drawer{width:440px;max-width:100%;background:var(--card);height:100%;padding:32px;display:flex;flex-direction:column;overflow:auto}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.dh h2{margin:0;font-size:22px;font-weight:800}
+.x{width:40px;height:40px;border:1px solid var(--bd);border-radius:8px;background:var(--card)}
+.item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.mini{width:64px;height:64px;border-radius:8px;background:var(--c);flex:none}
+.item .t{flex:1;font-weight:700;font-size:15px}.qty{display:flex;align-items:center;gap:10px;margin-top:8px;font-weight:700}
+.qty button{width:32px;height:32px;border:1px solid var(--bd);border-radius:6px;background:var(--card)}
+.link{background:none;border:0;color:var(--blue);font-weight:600;font-size:13px;margin-left:8px}
+.row{display:flex;justify-content:space-between;margin:10px 0;color:var(--mute)}.row b{color:var(--ink)}
+.row.t{font-size:18px;font-weight:800;color:var(--ink);border-top:1px solid var(--line);padding-top:14px}
+.modalOv{align-items:flex-start;justify-content:center;padding:60px 16px;overflow:auto}
+.modal{background:var(--card);border-radius:16px;width:520px;max-width:100%;padding:28px;position:relative}
+.steps{display:flex;gap:24px;font-size:12px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:20px;color:var(--mute)}
+.steps .ok{color:var(--green);font-weight:600}.steps .cur{color:var(--blue);font-weight:700}
+.modal .x{position:absolute;right:28px;top:62px}.modal h2{margin:0 0 4px;font-size:22px;font-weight:800;padding-right:50px}
+.info{background:#dbeafe;color:#1e3a8a;border-radius:8px;padding:11px 12px;font-size:12px;margin:14px 0}
+.err{background:#fee2e2;color:#7f1d1d;border-radius:8px;padding:14px 12px;font-size:13px;font-weight:600;margin:14px 0}
+.f{margin-top:16px;flex:1}.f label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+.f input{width:100%;height:44px;border:1px solid var(--bd);border-radius:8px;padding:0 14px;background:var(--card)}
+.f input:focus{border:2px solid var(--blue);box-shadow:0 0 0 3px #bfdbfe;outline:0}
+.f.bad input{border:2px solid var(--red)}.f small{display:none;color:var(--red);font-size:12px;margin-top:6px}.f.bad small{display:block}
+.two{display:flex;gap:16px}
+.amt{background:var(--bg);border-radius:8px;padding:14px 16px;font-weight:700;margin:20px 0}
+.foot{text-align:center;font-size:12px;color:var(--mute);margin-top:16px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:s .8s linear infinite;vertical-align:-2px;margin-right:10px}
+@keyframes s{to{transform:rotate(360deg)}}
+.check{width:72px;height:72px;border-radius:50%;background:var(--green);color:#fff;font-size:34px;display:grid;place-items:center;margin:20px auto}
+.ok-t{text-align:center}.ok-t h2{padding:0;font-size:24px}.rec{border:1px solid var(--line);border-radius:12px;padding:16px;margin:22px 0}
+.rec .row{margin:12px 0 0}.rec h5{margin:0 0 4px;font-size:15px;display:flex;justify-content:space-between}.rec h5 span{color:var(--green);font-size:12px}
+.sum{position:sticky;top:100px}
+@media(max-width:900px){header{padding:12px 16px;flex-wrap:wrap}.search{order:3;flex-basis:100%}main{padding:20px 16px}.layout{grid-template-columns:1fr}.cartbtn{margin-left:auto}.co{grid-template-columns:1fr!important}.two{flex-direction:column;gap:0}.sum{position:static}}
+</style></head><body>
+<header>
+ <div class="logo" onclick="go('cat')"><i>S</i>STELLAR<b>VAULT</b></div>
+ <input class="search" id="q" placeholder="Buscar manga, novela ligera o figura…" aria-label="Buscar">
+ <button class="cartbtn" id="cartBtn" onclick="openCart()"></button>
+</header>
+<main id="app"></main>
+
+<div class="ov" id="drawerOv" onclick="if(event.target===this)closeCart()"><aside class="drawer" id="drawer" aria-label="Carrito"></aside></div>
+<div class="ov modalOv" id="payOv"><div class="modal" id="pay" role="dialog" aria-modal="true"></div></div>
+
+<script>
+const P=[
+["Mayonaka Heart Tune Vol. 1","Masakuni Igarashi","Editorial Ivrea","m",12.5,8,"#be185d","#fdf2f8","#9d174d"],
+["Chainsaw Man Vol. 15","Tatsuki Fujimoto","Editorial Norma","m",11.75,12,"#b91c1c","#fef2f2","#991b1b"],
+["One Punch Man Vol. 2","ONE · Yusuke Murata","Edición en español","m",12.25,9,"#a16207","#fefce8","#854d0e"],
+["Grand Blue Dreaming Vol. 3","Kenji Inoue","Edición en español","m",13.9,5,"#0369a1","#f0f9ff","#075985"],
+["Spy × Family Vol. 8","Tatsuya Endo","Edición en español","m",12,7,"#15803d","#f0fdf4","#166534"],
+["Frieren Vol. 6","Kanehito Yamada","Edición en español","m",12.9,10,"#6d28d9","#f5f3ff","#5b21b6"],
+["Youkoso Jitsuryoku Vol. 25","Shōgo Kinugasa","Yen Press","n",16,3,"#0f766e","#f0fdfa","#115e59"],
+["Date a Live Vol. 16","Koushi Tachibana","Yen Press","n",17.5,6,"#be123c","#fff1f2","#9f1239"],
+["Mushoku Tensei Vol. 7","Rifujin na Magonote","Yen Press","n",15.5,4,"#4338ca","#eef2ff","#3730a3"],
+["Furina 1/7 Genshin Impact","Good Smile Company","HoYoverse Licensed","f",189,99,"#2563eb","#eff6ff","#1e40af","Preventa oficial · nov. 2026"],
+["Misono Mika 1/7 Shizuku-tan","Aniplex+","CloverWorks Licensed","f",174,2,"#db2777","#fdf2f8","#9d174d"],
+["Satoru Gojo 1/8 Jujutsu Kaisen","Kotobukiya","TOHO Animation","f",164.9,99,"#334155","#f1f5f9","#1e293b","Preventa oficial · ene. 2027"]
+].map((a,i)=>({id:i,name:a[0],by:a[1],pub:a[2],cat:a[3],price:a[4],stock:a[5],c:a[6],tint:a[7],tc:a[8],pre:a[9]}));
+const CAT={m:"Manga",n:"Novela ligera",f:"Figura"};
+const $=s=>document.querySelector(s), money=n=>"$"+n.toFixed(2);
+let cart={0:0,1:0,2:0}; // se llena abajo
+cart={1:1,2:1}; // Chainsaw Man + One Punch Man, como en el diseño
+let view="cat", F={cats:new Set(["m","n","f"]),av:"all",q:""}, order=null;
+
+const count=()=>Object.values(cart).reduce((a,b)=>a+b,0);
+const sub=()=>Object.entries(cart).reduce((a,[id,q])=>a+P[id].price*q,0);
+const ship=()=>sub()===0||sub()>=60?0:3.5;
+const total=()=>sub()+ship();
+
+function header(){const n=count();$("#cartBtn").textContent=`Carrito: ${n} ${n===1?"ítem":"ítems"}`}
+function go(v){view=v;render();scrollTo(0,0)}
+
+function render(){header();view==="cat"?catalog():checkout()}
+
+function catalog(){
+ const list=P.filter(p=>F.cats.has(p.cat)&&(F.av==="all"||(F.av==="stock"?!p.pre:!!p.pre))&&(p.name+p.by+CAT[p.cat]).toLowerCase().includes(F.q.toLowerCase()));
+ const cnt=c=>P.filter(p=>p.cat===c).length;
+ $("#app").innerHTML=`<h1>Catálogo de artículos</h1><p class="sub">Mostrando ${list.length} producto${list.length===1?"":"s"}</p>
+ <div class="layout"><aside class="panel"><h3>Filtros</h3><small>Refina tu búsqueda</small>
+ <div class="lbl">CATEGORÍAS</div>
+ ${[["m","Mangas"],["n","Novelas ligeras"],["f","Figuras coleccionables"]].map(([k,t])=>`<label class="opt"><input type="checkbox" ${F.cats.has(k)?"checked":""} onchange="togCat('${k}')"><span>${t}</span><span>${cnt(k)}</span></label>`).join("")}
+ <div class="lbl">DISPONIBILIDAD</div>
+ ${[["all","Todos"],["stock","En stock"],["pre","Preventa oficial"]].map(([k,t])=>`<label class="opt"><input type="radio" name="av" ${F.av===k?"checked":""} onchange="F.av='${k}';render()"><span>${t}</span></label>`).join("")}
+ <button class="reset" onclick="F={cats:new Set(['m','n','f']),av:'all',q:''};$('#q').value='';render()">Restablecer filtros</button>
+ <div class="note">Envío gratis desde $60 USD</div></aside>
+ <section>${list.length?`<div class="grid">${list.map(card).join("")}</div>`:`<div class="panel empty">No encontramos productos con esos filtros.</div>`}</section></div>`;
+}
+function card(p){
+ const inCart=cart[p.id]||0, out=!p.pre&&inCart>=p.stock;
+ const st=p.pre?`<div class="stock p">● ${p.pre}</div>`:p.stock<=3?`<div class="stock w">● Últimas ${p.stock} unidades</div>`:`<div class="stock">● En stock · ${p.stock} unidades</div>`;
+ const t=p.name.toUpperCase().split(/ (?=VOL|1\/)/);
+ return `<article class="prod" style="--tint:${p.tint};--tc:${p.tc};--c:${p.c}"><div class="thumb"><div class="cover ${p.cat==="f"?"fig":""}"><div><b>${t[0].slice(0,14)}</b>${p.cat==="f"?"FIGURA A ESCALA":(t[1]||"")}</div></div></div>
+ <span class="tag">${CAT[p.cat]}</span><h4>${p.name}</h4><p>${p.by}</p><p>${p.pub}</p>${st}
+ <div class="price">${money(p.price)} USD<small>IVA incl.</small></div>
+ <button class="btn" ${out?"disabled":""} onclick="add(${p.id})">${out?"Máximo en carrito":p.pre?"Reservar en preventa":"Añadir al carrito"}</button></article>`}
+function togCat(k){F.cats.has(k)?F.cats.delete(k):F.cats.add(k);render()}
+$("#q").oninput=e=>{F.q=e.target.value;if(view!=="cat")view="cat";render()};
+
+function add(id){const p=P[id];if(!p.pre&&(cart[id]||0)>=p.stock)return;cart[id]=(cart[id]||0)+1;render();openCart()}
+function setQty(id,d){const p=P[id];const n=(cart[id]||0)+d;if(n<=0)delete cart[id];else if(p.pre||n<=p.stock)cart[id]=n;render();drawer()}
+
+function openCart(){drawer();$("#drawerOv").classList.add("on")}
+function closeCart(){$("#drawerOv").classList.remove("on")}
+function drawer(){
+ const ids=Object.keys(cart);
+ $("#drawer").innerHTML=`<div class="dh"><h2>Tu carrito (${count()})</h2><button class="x" onclick="closeCart()" aria-label="Cerrar">✕</button></div>
+ <div style="flex:1">${ids.length?ids.map(id=>{const p=P[id],q=cart[id];return `<div class="item" style="--c:${p.c}"><div class="mini"></div><div class="t">${p.name}<div class="qty"><button onclick="setQty(${id},-1)" aria-label="Menos">−</button>${q}<button onclick="setQty(${id},1)" aria-label="Más">+</button><button class="link" onclick="setQty(${id},-99)">Quitar</button></div></div><b>${money(p.price*q)}</b></div>`}).join(""):`<div class="empty">Tu carrito está vacío.</div>`}</div>
+ <div class="row">Subtotal<b>${money(sub())}</b></div><div class="row">Envío<b>${money(ship())}</b></div>
+ <div class="row t">Total<span>${money(total())} USD</span></div><div class="foot" style="text-align:left;margin:0 0 16px">Envío gratis desde $60 USD. IVA incluido.</div>
+ <button class="btn" ${ids.length?"":"disabled"} onclick="closeCart();go('co')">Ir a pagar</button>`}
+
+const V={name:"Santiago Quiguango",tel:"0991234567",city:"Quito",prov:"Pichincha",addr:"Av. 12 de Octubre N24-562 y Wilson"};
+function checkout(){
+ if(!count()){go("cat");return}
+ const fld=(k,l,w)=>`<div class="f" style="${w?"grid-column:1/-1":""}"><label>${l}</label><input value="${V[k]}" oninput="V.${k}=this.value"></div>`;
+ $("#app").innerHTML=`<h1>Finaliza tu pedido</h1><p class="sub">Revisa tu dirección de entrega y confirma el pedido.</p>
+ <div class="layout co" style="grid-template-columns:1fr 400px"><div style="display:grid;gap:24px">
+ <section class="panel"><h3 style="font-size:18px;margin-bottom:8px">Dirección de entrega</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">${fld("name","Nombre completo")}${fld("tel","Teléfono")}${fld("city","Ciudad")}${fld("prov","Provincia")}${fld("addr","Dirección",1)}</div></section>
+ <section class="panel"><h3 style="font-size:18px">Artículos en tu pedido</h3>${Object.keys(cart).map(id=>`<div class="item" style="--c:${P[id].c}"><div class="mini" style="width:56px;height:56px"></div><div class="t">${P[id].name}<div style="font-weight:400;font-size:12px;color:var(--mute)">${cart[id]} unidad${cart[id]>1?"es":""}</div></div><b>${money(P[id].price*cart[id])}</b></div>`).join("")}</section></div>
+ <aside class="panel sum"><h3 style="font-size:18px;margin-bottom:12px">Resumen del pedido</h3><div class="row">Subtotal<b>${money(sub())}</b></div><div class="row">Envío<b>${money(ship())}</b></div><div class="row t">Total<span>${money(total())} USD</span></div>
+ <button class="btn" style="margin-top:16px" onclick="openPay()">Continuar al pago</button><div class="foot">Podrás revisar todo antes de pagar.</div></aside></div>`}
+
+/* ---- Pasarela de pago ---- */
+let C={name:"",num:"",exp:"",cvv:""},bad={},busy=false,gErr=false;
+const steps=n=>`<div class="steps"><span class="ok">✓ 1. Carrito</span><span class="${n===2?"cur":"ok"}">${n===3?"✓ ":""}2. Pago</span><span class="${n===3?"cur":""}">3. Confirmación</span></div>`;
+const foot=`<div class="foot">Conexión cifrada TLS · STELLAR VAULT no guarda los datos de tu tarjeta</div>`;
+function openPay(){C={name:"",num:"",exp:"",cvv:""};bad={};gErr=false;busy=false;payForm();$("#payOv").classList.add("on")}
+function closePay(){if(busy)return;$("#payOv").classList.remove("on")}
+function payForm(){
+ const f=(k,l,ph,msg,extra="")=>`<div class="f ${bad[k]?"bad":""}"><label for="c${k}">${l}</label><input id="c${k}" value="${C[k]}" placeholder="${ph}" ${busy?"disabled":""} ${extra} oninput="onIn('${k}',this)" ${bad[k]?'aria-invalid="true"':""}><small>⚠ ${msg}</small></div>`;
+ $("#pay").innerHTML=`${steps(2)}<button class="x" onclick="closePay()" aria-label="Cerrar">✕</button><h2>Pasarela de pago seguro</h2>
+ ${gErr?`<div class="err" role="alert">No pudimos procesar el pago. Corrige los campos marcados.</div>`:`<p style="margin:0;font-size:13px;color:var(--mute)">Ingresa los datos tal como aparecen en tu tarjeta.</p><div class="info">Pago protegido con validación bancaria y cifrado de extremo a extremo.</div>`}
+ ${f("name","Nombre impreso en la tarjeta","Ej. Santiago Quiguango","Escribe el nombre como aparece en la tarjeta.")}
+ ${f("num","Número de tarjeta","0000 0000 0000 0000","Revisa el número: debe tener 16 dígitos.",'inputmode="numeric" autocomplete="cc-number"')}
+ <div class="two">${f("exp","Fecha de expiración","MM/AA","Ingresa mes y año válidos.",'inputmode="numeric"')}${f("cvv","Código de seguridad (CVV)","3 dígitos","Ingresa 3 dígitos.",`inputmode="numeric" ${busy?"":'type="password"'}`)}</div>
+ <div class="amt">Monto final a debitar: ${money(total())} USD</div>
+ <button class="btn" ${busy?"disabled":""} onclick="submitPay()">${busy?'<span class="spin"></span>Autorizando pago seguro…':"Autorizar y pagar pedido"}</button>
+ ${busy?`<div class="foot">No cierres esta ventana. Evitamos envíos duplicados.</div>`:foot}`}
+function onIn(k,el){
+ let v=el.value;
+ if(k==="num")v=v.replace(/\D/g,"").slice(0,16).replace(/(.{4})/g,"$1 ").trim();
+ if(k==="exp"){v=v.replace(/\D/g,"").slice(0,4);if(v.length>2)v=v.slice(0,2)+"/"+v.slice(2)}
+ if(k==="cvv")v=v.replace(/\D/g,"").slice(0,3);
+ C[k]=v;el.value=v;if(bad[k]){delete bad[k];el.closest(".f").classList.remove("bad")}
+}
+function validate(){
+ const b={};
+ if(C.name.trim().split(/\s+/).filter(w=>w.length>1).length<2)b.name=1;
+ if(C.num.replace(/\s/g,"").length!==16)b.num=1;
+ const m=C.exp.match(/^(\d\d)\/(\d\d)$/);
+ if(!m||+m[1]<1||+m[1]>12||(2000+ +m[2])*12+ +m[1]<new Date().getFullYear()*12+new Date().getMonth()+1)b.exp=1;
+ if(C.cvv.length!==3)b.cvv=1;
+ return b;
+}
+function submitPay(){
+ bad=validate();gErr=!!Object.keys(bad).length;
+ if(gErr){payForm();const e=document.querySelector(".f.bad input");e&&e.focus();return}
+ busy=true;payForm();
+ setTimeout(()=>{
+  order={no:"#AKB-2026-"+(1000+Math.floor(Math.random()*9000)),last:C.num.slice(-4),units:count(),total:total()};
+  busy=false;done();
+ },2200);
+}
+function done(){
+ $("#pay").innerHTML=`${steps(3)}<div class="ok-t"><div class="check">✓</div><h2>¡Transacción aprobada con éxito!</h2><p style="color:var(--mute);font-size:13px;margin:0">Tu pago fue validado. El comprobante fue enviado a tu correo.</p></div>
+ <div class="rec"><h5>Comprobante digital<span>APROBADO</span></h5>
+ <div class="row">N.º de pedido<b>${order.no}</b></div><div class="row">Tarjeta<b>**** **** **** ${order.last}</b></div><div class="row">Artículos<b>${order.units} unidad${order.units>1?"es":""}</b></div><div class="row">Total debitado<b>${money(order.total)} USD</b></div></div>
+ <button class="btn g" onclick="finish()">Finalizar y volver al catálogo</button>${foot}`}
+function finish(){cart={};$("#payOv").classList.remove("on");go("cat")}
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closePay();closeCart()}});
+render();
+</script></body></html>
